@@ -101,9 +101,9 @@ if os.environ.get('GITHUB_WORKFLOW'):
     DATABASES = {
         'default': {
            'ENGINE': 'django.db.backends.postgresql',
-           'NAME': 'jesus_uribedb',
-           'USER': 'jesus_uribe',
-           'PASSWORD': '1701',
+           'NAME': 'antony_juarezdb',
+           'USER': 'antony_juarez',
+           'PASSWORD': 'fassi080904',
            'HOST': 'localhost',
            'PORT': '5432',
         }

@@ -1,4 +1,4 @@
-name: CI Django Without Docker
+name: Django No Docker
 
 on:
   workflow_call:
@@ -9,15 +9,22 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  simple_build:
     runs-on: ubuntu-latest
+    env:
+      PSQL_USERNAME: antony_juarez
+      PSQL_PASS: fassi080904
+      PSQL_DBNAME: antony_juarezdb
+      JWT_TOKEN_TIME: "120"
+      PSQL_HOST: localhost
+      PSQL_PORT: 5432 
     services:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: antony_juarez
-          POSTGRES_PASSWORD: fassi080904
-          POSTGRES_DB: antony_juarezdb
+          POSTGRES_USER: ${{ env.PSQL_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.PSQL_PASS }}
+          POSTGRES_DB: ${{ env.PSQL_DBNAME }}
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -28,11 +35,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Install dependencies
+      - name: Install requirements
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Make migrations
+        run: python manage.py makemigrations
       - name: Run migrations
         run: python manage.py migrate
       - name: Run tests
-        run: python manage.py test          
+        run: pytest         
